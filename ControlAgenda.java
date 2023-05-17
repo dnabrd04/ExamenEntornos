@@ -55,33 +55,65 @@ public class ControlAgenda {
 
 		// Bucle general
 		do {
+			try {
 			menúPrincipal.mostrarTítulo1();
 			menúPrincipal.mostrarOpciones();
-			opciónElegida = menúPrincipal.pedirOpción();
+				opciónElegida = menúPrincipal.pedirOpción();
 			switch (opciónElegida) {
 			case 0:
 			case 5: // SALIR
 				fin = true;
 				Vista.mostrarAviso("¡¡¡A-D-I-O-S!!");
 				break;
-			//case 1: // Opción 1: Entrada datos
-			//	cargarTeléfono();
-			//	break;
-			//case 2: // Opción 2: Mostrar listado
-			//	mostrarAgenda();
-			//	break;
-			//case 3: // Opción 3: Mostrar estado
-			//	mostrarEstado();
-			//	break;
-			//case 4: // Opción 4: Reset
-			//	restablecer();
-			//	break;
+			case 1: // Opción 1: Entrada datos
+				cargarTeléfono();
+				break;
+			case 2: // Opción 2: Mostrar listado
+				mostrarAgenda();
+				break;
+			case 3: // Opción 3: Mostrar estado
+				mostrarEstado();
+				break;
+			case 4: // Opción 4: Reset
+				restablecer();
+				break;
 			default: // Opción no esperada: abortar
 				ejecutarGenérico(opciónElegida);
 				Vista.mostrarError("Error interno de programa - operación pendiente de desarrollo");
 				System.exit(1);
 			}
+			} catch (VistaException e) {
+				
+			}
 		} while (!fin);
+	}
+
+	private void restablecer() {
+		boolean borrar;
+		borrar = Vista.pedirConfirmación("Seguro que quiere borrar todo %s");
+		if (borrar == true) {
+			agenda = new AgendaTeléfonos();
+		}
+	}
+
+	private void mostrarEstado() {
+		VistaEstado estado = new VistaEstado(agendaFueBorrada, agendaFueExportada, agendaFueImportada, agenda);
+		estado.mostrarEstado();
+	}
+
+	private void mostrarAgenda() {
+		VistaListado listaAdenda = new VistaListado(agenda);
+		listaAdenda.listar();
+	}
+
+	/**
+	 * @throws VistaException 
+	 * 
+	 */
+	private void cargarTeléfono() throws VistaException {
+		VistaAlta altaTeléfono = new VistaAlta();
+		agenda.añadir(altaTeléfono.pedirNombre(), altaTeléfono.pedirNumero());
+		
 	}
 
 	/**
